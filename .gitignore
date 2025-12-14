@@ -1,0 +1,34 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environment
+venv/
+.env/
+.venv/
+
+# Editor/IDE
+.vscode/
+.idea/
+
+# MacOS
+.DS_Store
+
+# Pytest / coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Logs
+*.log
+
+# Byte‑compiled / compiled
+*.so
+
+# Alembic migrations (optional—keep your versions if needed)
+# alembic/versions/*.py
+
+# Docker
+pgdata/
