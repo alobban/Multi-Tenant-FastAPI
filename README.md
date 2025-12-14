@@ -25,7 +25,15 @@ uvicorn ./app/main:app --reload
 fastapi ./app/main.py
 ```
 
-## Access Swagger
+## Access Documentations
 We can access Swagger by routing to `/docs`:
 
 [localhost:8000/docs](http://localhost:8000/docs)
+
+We can access Redocly by routing to `/redoc`:
+
+[localhost:8000/redoc](http://localhost:8000/redoc)
+
+We can access the Open API JSON by routing to `/openapi.json`:
+
+[localhost:8000/openapi.json](http://localhost:8000/openapi.json)
