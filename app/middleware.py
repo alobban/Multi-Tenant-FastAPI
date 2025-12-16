@@ -1,9 +1,20 @@
 from fastapi import Request, HTTPException
 
 DOC_PATHS = {"/docs", "/redoc", "/openapi.json"}
+TENANT_BYPASSED_PATH = '/tenants' 
 
 async def tenant_middleware(request: Request, call_next):
+    path = request.url.path
+    method = request.method
+
+    print( f"Request path: {path}, method: {method}" )
     if request.url.path in DOC_PATHS:
+        return await call_next(request)
+    
+    # Bypass for:
+    # POST /tenants  (create tenant)
+    # GET /tenants   (list tenants)
+    if path == TENANT_BYPASSED_PATH and method in ["POST", "GET"]:
         return await call_next(request)
     
     tenant = request.headers.get("X-Tenant-ID")

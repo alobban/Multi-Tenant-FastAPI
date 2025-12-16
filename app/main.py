@@ -10,6 +10,12 @@ from middleware import tenant_middleware, get_tenant_id
 app = FastAPI()
 app.middleware("http")(tenant_middleware)
 
+@app.get("/tenants", response_model=list[TenantOut])
+async def list_tenants(db=Depends(get_db)):
+    q = await db.execute(select(Tenant))
+    tenants = q.scalars().all()
+    return tenants
+
 @app.post("/tenants", response_model=TenantOut)
 async def create_tenant(data: TenantCreate, db=Depends(get_db)):
     tenant = Tenant(id=uuid4(), name=data.name)
