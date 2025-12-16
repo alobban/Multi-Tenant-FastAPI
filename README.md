@@ -14,6 +14,12 @@ pip install -r requirements.txt
 docker compose up -d
 ```
 
+- Third you will need to apply the migrations:
+
+```bash
+alembic upgrade head
+```
+
 Once all is successfully installed and running, you can now run the application server with the following **dev** command:
 
 ```bash
