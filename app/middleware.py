@@ -1,14 +1,16 @@
 from fastapi import Request, HTTPException
 
-DOC_PATHS = {"/docs", "/redoc", "/openapi.json"}
+DOC_PATHS = {"/docs", "/redoc", "/openapi.json", "/login", "/token"}
 TENANT_BYPASSED_PATH = '/tenants' 
 
 async def tenant_middleware(request: Request, call_next):
     path = request.url.path
     method = request.method
 
-    print( f"Request path: {path}, method: {method}" )
-    if request.url.path in DOC_PATHS:
+    if path == "/favicon.ico":
+        return await call_next(request)
+
+    if path in DOC_PATHS:
         return await call_next(request)
     
     # Bypass for:
