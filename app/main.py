@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Depends, HTTPException
+from fastapi import FastAPI, Depends, HTTPException, Request
 from uuid import uuid4
 from fastapi.responses import RedirectResponse
 import requests
@@ -8,37 +8,19 @@ from db import get_db
 from models import Tenant, User
 from schema_types import TenantCreate, TenantOut, UserCreate, UserOut
 from middleware import tenant_middleware, get_tenant_id
+from auth_middleware import auth_middleware
 
 app = FastAPI()
 app.middleware("http")(tenant_middleware)
+app.middleware("http")(auth_middleware)
 
 @app.get("/login")
-def login():
-    return RedirectResponse(
-        'https://dev-lobban876.us.auth0.com/authorize'
-        '?response_type=code'
-        '&client_id=lTsc9z3BOROX4Gact75m0LCFkTurp7cb'
-        '&redirect_uri=http://localhost:8000/token'
-        '&scope=offline_access openid profile email'
-        '&audience=https://prommiseme.com/api/tenants'
-    )
-
-@app.get("/token")
-def get_access_token(code: str):
-    payload = (
-        "grant_type=authorization_code"
-        "&client_id=lTsc9z3BOROX4Gact75m0LCFkTurp7cb"
-        "&client_secret=lzKa3VZrlxZiWqHbV1O3kz6A-9zBopHY76E7BCp1FsSDNwjFYoLZ2QpTPdbP2868"
-        f"&code={code}"
-        "&redirect_uri=http://localhost:8000/token"
-    )
-    headers = {'content-type': 'application/x-www-form-urlencoded'}
-    response = requests.post(
-        'https://dev-lobban876.us.auth0.com/oauth/token',
-        payload,
-        headers=headers
-    )
-    return response.json()
+def login(request: Request):
+    return {
+        "message": "Authenticated successfully",
+        "user": request.state.user
+    }
+    
 
 @app.get("/tenants", response_model=list[TenantOut])
 async def list_tenants(db=Depends(get_db)):
